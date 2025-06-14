@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Tutorial</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Enhanced Tutorial Styling -->
+    <style>
+        .tutorial-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .tutorial-step {
+            background: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-time), box-shadow var(--transition-time);
+        }
+        
+        .tutorial-step:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .step-header {
+            background: linear-gradient(135deg, var(--chunk-color), #2563eb);
+            color: white;
+            padding: 20px 25px;
+            border-radius: calc(var(--border-radius) - 2px) calc(var(--border-radius) - 2px) 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .step-content {
+            padding: 25px;
+        }
+        
+        .excel-demo {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .demo-header {
+            background: #e9ecef;
+            padding: 10px 15px;
+            font-weight: 600;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .demo-content {
+            padding: 20px;
+            background: white;
+        }
+        
+        .formula-box {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            font-family: 'Consolas', 'Monaco', monospace;
+            border-left: 4px solid var(--accent-color);
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--chew-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--chew-color);
+            font-weight: 600;
+        }
+        
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid #ffc107;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #b8860b;
+            font-weight: 600;
+        }
+        
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 38, 84, 0.2);
+            z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            gap: 20px;
+        }
+        
+        .nav-button {
+            background: var(--accent-color);
+            color: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform var(--transition-time), box-shadow var(--transition-time);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .nav-button.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .buckles-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #b8860b;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 999;
+            border: 2px solid var(--outline-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .glossary-button {
+            position: fixed;
+            top: 20px;
+            right: 140px;
+            background: var(--chew-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 999;
+            border: 2px solid var(--outline-color);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-time);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .glossary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .glossary-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            border-left: 2px solid var(--outline-color);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .glossary-panel.active {
+            right: 0;
+        }
+        
+        .glossary-header {
+            background: var(--chew-color);
+            color: white;
+            padding: 15px 20px;
+            margin: -20px -20px 20px -20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 20px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .term-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .term-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .tutorial-content {
+                padding: 0 20px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+            }
+            
+            .glossary-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+    <!-- Buckles Display -->
+    <div class="buckles-display">
+        <i class="fas fa-medal"></i>
+        <span id="buckles-count">0</span>
+    </div>
+    
+    <!-- Glossary Button -->
+    <div class="glossary-button" onclick="toggleGlossary()">
+        <i class="fas fa-book"></i>
+        <span>Glossary</span>
+    </div>
+    
+    <!-- Glossary Panel -->
+    <div class="glossary-panel" id="glossary-panel">
+        <div class="glossary-header">
+            <h3>Excel Glossary</h3>
+            <button class="close-button" onclick="toggleGlossary()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <input type="text" class="search-input" id="glossary-search" placeholder="Search terms...">
+        
+        <div id="glossary-content">
+            <div class="term-item">
+                <div class="term-title">Cell</div>
+                <p>The intersection of a row and column in a spreadsheet where you can enter data.</p>
+            </div>
+            <div class="term-item">
+                <div class="term-title">Formula</div>
+                <p>An equation that performs calculations on values in your worksheet. Always starts with =</p>
+            </div>
+            <div class="term-item">
+                <div class="term-title">Function</div>
+                <p>Pre-built formulas that perform specific calculations like SUM, AVERAGE, COUNT.</p>
+            </div>
+            <div class="term-item">
+                <div class="term-title">Range</div>
+                <p>A group of cells, such as A1:C5 (from cell A1 to cell C5).</p>
+            </div>
+            <div class="term-item">
+                <div class="term-title">Filter</div>
+                <p>A tool to show only specific data based on criteria you set.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">EXCEL TUTORIAL</div>
+        <a href="index.html" class="home-button">
+            <i class="fas fa-home"></i>
+            HOME
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="light-section">
+            <div class="tutorial-content">
+                <h1 id="tutorial-title">EXCEL TUTORIAL <i class="fas fa-table" style="margin-left: 15px;"></i></h1>
+                
+                <!-- Tutorial steps will be dynamically loaded here -->
+                <div id="tutorial-steps">
+                    <!-- Example step structure -->
+                    <div class="tutorial-step">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h3 style="margin: 0;">Getting Started with Excel</h3>
+                                <p style="margin: 5px 0 0 0; opacity: 0.9;">Learn the basics of Excel interface</p>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <p>Welcome to Excel! Let's start by understanding the basic interface and how to navigate around a spreadsheet.</p>
+                            
+                            <div class="tip-box">
+                                <div class="tip-header">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>Tip</span>
+                                </div>
+                                <p>Each cell in Excel has a unique address made up of its column letter and row number, like A1 or B5.</p>
+                            </div>
+                            
+                            <div class="excel-demo">
+                                <div class="demo-header">
+                                    <i class="fas fa-table"></i>
+                                    <span>Excel Example</span>
+                                </div>
+                                <div class="demo-content">
+                                    <p><strong>Cell A1:</strong> The top-left cell in your spreadsheet</p>
+                                    <p><strong>Cell C5:</strong> Column C, Row 5</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div>
+                                <h3 style="margin: 0;">Entering Data</h3>
+                                <p style="margin: 5px 0 0 0; opacity: 0.9;">How to put information into cells</p>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <p>To enter data into a cell, simply click on it and start typing. Press Enter to confirm your entry.</p>
+                            
+                            <div class="excel-demo">
+                                <div class="demo-header">
+                                    <i class="fas fa-keyboard"></i>
+                                    <span>Try This</span>
+                                </div>
+                                <div class="demo-content">
+                                    <ol>
+                                        <li>Click on cell A1</li>
+                                        <li>Type "Hello World"</li>
+                                        <li>Press Enter</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div class="warning-box">
+                                <div class="warning-header">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Remember</span>
+                                </div>
+                                <p>Always press Enter or Tab to confirm your data entry, otherwise it won't be saved!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div>
+                                <h3 style="margin: 0;">Basic Formulas</h3>
+                                <p style="margin: 5px 0 0 0; opacity: 0.9;">Making Excel do calculations for you</p>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <p>Formulas are what make Excel powerful. They always start with an equals sign (=) and can perform calculations using cell references.</p>
+                            
+                            <div class="formula-box">
+                                =A1+B1
+                            </div>
+                            <p><em>This formula adds the values in cells A1 and B1</em></p>
+                            
+                            <div class="excel-demo">
+                                <div class="demo-header">
+                                    <i class="fas fa-calculator"></i>
+                                    <span>Practice Exercise</span>
+                                </div>
+                                <div class="demo-content">
+                                    <ol>
+                                        <li>Put the number 5 in cell A1</li>
+                                        <li>Put the number 3 in cell B1</li>
+                                        <li>In cell C1, type: =A1+B1</li>
+                                        <li>Press Enter and see the result!</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <div class="navigation-buttons">
+                    <a href="index.html" class="nav-button">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Tutorials
+                    </a>
+                    <button class="nav-button" onclick="completeStep()">
+                        <span>Mark as Complete</span>
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        let totalSteps = 3;
+        let completedSteps = new Set();
+        
+        // Update progress bar
+        function updateProgress() {
+            const progress = (completedSteps.size / totalSteps) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+        
+        // Toggle glossary panel
+        function toggleGlossary() {
+            const panel = document.getElementById('glossary-panel');
+            panel.classList.toggle('active');
+        }
+        
+        // Complete current step
+        function completeStep() {
+            completedSteps.add(currentStep);
+            updateProgress();
+            
+            // Award buckles
+            const bucklesCount = document.getElementById('buckles-count');
+            let current = parseInt(bucklesCount.textContent);
+            bucklesCount.textContent = current + 2;
+            
+            // Visual feedback
+            alert('🎉 Step completed! You earned 2 buckles!');
+        }
+        
+        // Glossary search functionality
+        document.getElementById('glossary-search').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const terms = document.querySelectorAll('.term-item');
+            
+            terms.forEach(term => {
+                const title = term.querySelector('.term-title').textContent.toLowerCase();
+                const content = term.textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    term.style.display = 'block';
+                } else {
+                    term.style.display = 'none';
+                }
+            });
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

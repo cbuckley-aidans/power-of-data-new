@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Skills Centre</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Enhanced Styling to match variables.html aesthetic -->
+    <style>
+        /* Override main-content to remove sidebar space */
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Floating home button */
+        .floating-home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform var(--transition-time), box-shadow var(--transition-time);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 999;
+        }
+        
+        .floating-home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Single column layout for skills */
+        .skills-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .skill-card {
+            background: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-time), box-shadow var(--transition-time);
+            overflow: hidden;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .skill-header {
+            background: var(--accent-bg);
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--outline-color);
+            transition: background-color var(--transition-time);
+        }
+        
+        .skill-header:hover {
+            background: #e9ecef;
+        }
+        
+        .skill-header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .skill-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+        }
+        
+        .skill-icon.blue { background: var(--chunk-color); }
+        .skill-icon.green { background: var(--chew-color); }
+        .skill-icon.red { background: var(--bad-color); }
+        .skill-icon.yellow { background: #ffc107; }
+        .skill-icon.purple { background: #6f42c1; }
+        .skill-icon.orange { background: #fd7e14; }
+        .skill-icon.indigo { background: #6366f1; }
+        .skill-icon.pink { background: #ec4899; }
+        .skill-icon.teal { background: #14b8a6; }
+        
+        .skill-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0;
+        }
+        
+        .toggle-arrow {
+            color: var(--accent-color);
+            font-size: 1.2em;
+            transition: transform var(--transition-time);
+        }
+        
+        .toggle-arrow.rotate {
+            transform: rotate(180deg);
+        }
+        
+        .skill-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: white;
+        }
+        
+        .skill-content.active {
+            max-height: 3000px;
+            overflow: visible;
+        }
+        
+        .skill-details {
+            padding: 25px;
+        }
+        
+        /* Video container styling */
+        .video-container {
+            position: relative;
+            padding-bottom: 42%;
+            width: 85%;
+            margin: 20px auto;
+            height: 0;
+            overflow: hidden;
+            background-color: #1a202c;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--outline-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: calc(var(--border-radius) - 2px);
+            object-fit: contain;
+        }
+        
+        /* Example code styling */
+        .example-code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        /* Info boxes */
+        .info-box {
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid;
+        }
+        
+        .info-box.tip {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--chew-color);
+        }
+        
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: #ffc107;
+        }
+        
+        .info-box.usage {
+            background: rgba(0, 38, 84, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .info-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-box.tip h4 { color: var(--chew-color); }
+        .info-box.warning h4 { color: #b8860b; }
+        .info-box.usage h4 { color: var(--accent-color); }
+        
+        /* Excel table styling */
+        .excel-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .excel-grid th {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .excel-grid td {
+            border: 1px solid #d0d7de;
+            padding: 12px;
+            background: white;
+        }
+        
+        .excel-grid tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* Search and filter styling */
+        .search-container {
+            background: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1em;
+            transition: border-color var(--transition-time);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .filter-pill {
+            padding: 10px 20px;
+            background: var(--accent-bg);
+            border: 2px solid var(--outline-color);
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all var(--transition-time);
+        }
+        
+        .filter-pill:hover,
+        .filter-pill.active {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Interactive buttons */
+        .excel-button {
+            background: var(--accent-color);
+            color: white;
+            border: 2px solid var(--outline-color);
+            border-radius: var(--border-radius);
+            padding: 8px 16px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-time);
+            box-shadow: var(--shadow-sm);
+            margin: 2px;
+            font-size: 0.9em;
+        }
+        
+        .excel-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .excel-button.active {
+            background: var(--chew-color);
+        }
+        
+        /* Search highlight */
+        .search-highlight {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-radius: 3px;
+            padding: 2px 4px;
+        }
+        
+        /* Simulation containers */
+        .simulation-container {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .simulation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .simulation-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin: 0;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .skills-container {
+                margin: 0 20px;
+            }
+            
+            .floating-home-button {
+                position: relative;
+                margin: 20px;
+            }
+            
+            .search-container {
+                margin: 20px;
+            }
+            
+            .filter-pills {
+                justify-content: center;
+            }
+            
+            .skill-details {
+                padding: 20px;
+            }
+        }
+
+        /* Additional styles for interactive elements */
+        .toggle-arrow.rotate-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .excel-input {
+            background-color: #4a5568;
+            border: 1px solid #2d3748;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px;
+            width: 80px;
+        }
+        
+        .excel-tabs {
+            display: flex;
+            background-color: #1a202c;
+            border-bottom: 1px solid #4a5568;
+            padding: 4px 0 0 4px;
+        }
+        
+        .excel-tab {
+            padding: 6px 12px;
+            background-color: #2d3748;
+            border: 1px solid #4a5568;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 2px;
+            cursor: pointer;
+            position: relative;
+            bottom: -1px;
+        }
+        
+        .excel-tab.active {
+            background-color: #3182ce;
+            color: white;
+        }
+        
+        .excel-sheet {
+            padding: 10px;
+            border: 1px solid #4a5568;
+            border-top: none;
+        }
+        
+        .filtered-row {
+            animation: highlightRow 1s ease-in-out;
+        }
+        
+        @keyframes highlightRow {
+            0% { background-color: #3182ce; }
+            100% { background-color: inherit; }
+        }
+        
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-top: 20px;
+        }
+        
+        .chart-bar {
+            background-color: #3182ce;
+            width: 30px;
+            transition: height 0.5s ease;
+            position: relative;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .chart-bar:before {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        .sheet-tab {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.2s;
+        }
+        
+        .sheet-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Home Button -->
+    <a href="index.html" class="floating-home-button">
+        <i class="fas fa-arrow-left"></i>
+        Back to Tutorials
+    </a>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="light-section">
+            <div class="skills-container">
+                <h1 style="text-align: center; margin: 60px 0 30px 0;">EXCEL SKILLS CENTRE <i class="fas fa-graduation-cap" style="margin-left: 15px;"></i></h1>
+                <p style="text-align: center; font-size: 1.2em; color: #666; margin-bottom: 40px;">Quick reference guide for essential Excel skills</p>
+                
+                <!-- Search and Filter -->
+                <div class="search-container">
+                    <div class="element-header" style="margin: -25px -25px 20px -25px; padding: 20px 25px;">
+                        <div class="element-number">1</div>
+                        <h3>Find Your Skills <i class="fas fa-search" style="margin-left: 10px; color: var(--accent-color);"></i></h3>
+                    </div>
+                    
+                    <div style="position: relative;">
+                        <input type="text" id="skill-search" placeholder="Search skills..." class="search-input" style="padding-left: 50px;">
+                        <div style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #999;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-pills">
+                        <button class="filter-pill active" data-category="all">All</button>
+                        <button class="filter-pill" data-category="data-cleaning">Data Cleaning</button>
+                        <button class="filter-pill" data-category="functions">Functions</button>
+                        <button class="filter-pill" data-category="formatting">Formatting</button>
+                        <button class="filter-pill" data-category="visualization">Visualisation</button>
+                    </div>
+                </div>
+                
+                <!-- Skills List -->
+                <div id="skills-container">
+                    
+                    <!-- Filtering Skill -->
+                    <div class="skill-card" data-category="data-cleaning">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon blue">
+                                    <i class="fas fa-filter"></i>
+                                </div>
+                                <h3 class="skill-title">Filtering</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Temporarily hide data that doesn't meet your criteria, making it easier to focus on specific information without deleting anything.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Select the column or data range</li>
+                                    <li>Go to the Data tab in the ribbon</li>
+                                    <li>Click the Filter button (funnel icon)</li>
+                                    <li>Use dropdown arrows to select values to display</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/jUvNS8e.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Analysing specific subsets of data</li>
+                                        <li>Finding data that meets certain criteria</li>
+                                        <li>Focusing on relevant information</li>
+                                        <li>Removing outliers temporarily</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use multiple filters across different columns to narrow your data even further. Click the "Clear" button in the Data tab to remove all filters at once.</p>
+                                </div>
+                                
+                                <div class="simulation-container" id="filter-simulation">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Try it yourself:</h4>
+                                        <div>
+                                            <button class="excel-button filter-button" data-category="all">Show All</button>
+                                            <button class="excel-button filter-button" data-category="Electronics">Electronics</button>
+                                            <button class="excel-button filter-button" data-category="Furniture">Furniture</button>
+                                            <button class="excel-button filter-button" data-value="high">Sales > 800</button>
+                                        </div>
+                                    </div>
+                                    <table class="excel-grid" id="filter-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Category</th>
+                                                <th>Sales</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-category="Electronics" data-sales="1200">
+                                                <td>Laptop Pro</td>
+                                                <td>Electronics</td>
+                                                <td>1200</td>
+                                                <td>Active</td>
+                                            </tr>
+                                            <tr data-category="Furniture" data-sales="450">
+                                                <td>Office Chair</td>
+                                                <td>Furniture</td>
+                                                <td>450</td>
+                                                <td>Active</td>
+                                            </tr>
+                                            <tr data-category="Electronics" data-sales="890">
+                                                <td>Smartphone</td>
+                                                <td>Electronics</td>
+                                                <td>890</td>
+                                                <td>Active</td>
+                                            </tr>
+                                            <tr data-category="Furniture" data-sales="320">
+                                                <td>Desk Lamp</td>
+                                                <td>Furniture</td>
+                                                <td>320</td>
+                                                <td>Inactive</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sorting Skill -->
+                    <div class="skill-card" data-category="data-cleaning">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon green">
+                                    <i class="fas fa-sort"></i>
+                                </div>
+                                <h3 class="skill-title">Sorting</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Arrange data in a specific order (alphabetical, numerical, chronological) to organise and analyse patterns more easily.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Select the data range including headers</li>
+                                    <li>Go to the Data tab</li>
+                                    <li>Click Sort button</li>
+                                    <li>Choose column and sort order</li>
+                                    <li>Add levels for multi-column sorting</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/zqJ7ZaD.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Finding highest/lowest values quickly</li>
+                                        <li>Grouping related data together</li>
+                                        <li>Creating alphabetical lists</li>
+                                        <li>Preparing data for reports</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Always select all related data before sorting to keep rows together (CTRL + A selects everything for you). For quick sorts, select a single cell in the column and use the A-Z/Z-A buttons in the Data tab.</p>
+                                </div>
+                                
+                                <div class="simulation-container" id="sort-simulation">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Click any column header to sort:</h4>
+                                    </div>
+                                    <table class="excel-grid sort-table">
+                                        <thead>
+                                            <tr>
+                                                <th onclick="sortTable(0, 'string')" style="cursor: pointer;">Employee <span class="sort-indicator"></span></th>
+                                                <th onclick="sortTable(1, 'string')" style="cursor: pointer;">Department <span class="sort-indicator"></span></th>
+                                                <th onclick="sortTable(2, 'number')" style="cursor: pointer;">Performance <span class="sort-indicator"></span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Sarah Johnson</td>
+                                                <td>Marketing</td>
+                                                <td>87</td>
+                                            </tr>
+                                            <tr>
+                                                <td>David Kim</td>
+                                                <td>Finance</td>
+                                                <td>92</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Alex Rivera</td>
+                                                <td>IT</td>
+                                                <td>78</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Emma Chen</td>
+                                                <td>HR</td>
+                                                <td>95</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Michael Wong</td>
+                                                <td>Sales</td>
+                                                <td>82</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Deleting Columns Skill -->
+                    <div class="skill-card" data-category="data-cleaning">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon red">
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                                <h3 class="skill-title">Deleting Columns</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Remove unnecessary or redundant columns from your data to streamline your spreadsheet and improve performance.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Right-click on the column header (letter)</li>
+                                    <li>Select "Delete" from the context menu</li>
+                                    <li>Or select the column and press Ctrl+- (minus)</li>
+                                    <li>Confirm deletion if prompted</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/py8ypKT.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Removing columns with all empty cells</li>
+                                        <li>Eliminating duplicate or redundant data</li>
+                                        <li>Simplifying complex datasets</li>
+                                        <li>Preparing data for import/export</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box warning">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> Warning:</h4>
+                                    <p style="margin: 0;">Deleting columns is permanent! Always save a backup of your file before deleting important data. Use Hide instead of Delete if you might need the data later.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Click the X button to delete a column:</h4>
+                                        <button class="excel-button" id="reset-columns">Reset Columns</button>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="excel-grid delete-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Product <br>
+                                                        <button class="excel-button delete-col-btn" data-col="0">X</button>
+                                                    </th>
+                                                    <th>
+                                                        Category <br>
+                                                        <button class="excel-button delete-col-btn" data-col="1">X</button>
+                                                    </th>
+                                                    <th>
+                                                        SKU <br>
+                                                        <button class="excel-button delete-col-btn" data-col="2">X</button>
+                                                    </th>
+                                                    <th>
+                                                        Quantity <br>
+                                                        <button class="excel-button delete-col-btn" data-col="3">X</button>
+                                                    </th>
+                                                    <th>
+                                                        Price <br>
+                                                        <button class="excel-button delete-col-btn" data-col="4">X</button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Laptop</td>
+                                                    <td>Electronics</td>
+                                                    <td>EL-001</td>
+                                                    <td>24</td>
+                                                    <td>1200</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Desk Chair</td>
+                                                    <td>Furniture</td>
+                                                    <td>FU-052</td>
+                                                    <td>15</td>
+                                                    <td>179</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Headphones</td>
+                                                    <td>Electronics</td>
+                                                    <td>EL-124</td>
+                                                    <td>50</td>
+                                                    <td>89</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Creating & Renaming Sheets Skill -->
+                    <div class="skill-card" data-category="formatting">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon green">
+                                    <i class="fas fa-plus-square"></i>
+                                </div>
+                                <h3 class="skill-title">Creating & Renaming Sheets</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Organise your workbook by creating new worksheets and giving them meaningful names for better data management.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li><strong>Create:</strong> Right-click on sheet tab → Insert → Worksheet</li>
+                                    <li><strong>Rename:</strong> Right-click on sheet tab → Rename</li>
+                                    <li>Type the new name and press Enter</li>
+                                    <li>Use descriptive names like "Sales Data" or "Summary"</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/r6P0aS8.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Separating different types of data</li>
+                                        <li>Creating summary sheets</li>
+                                        <li>Organising monthly/quarterly reports</li>
+                                        <li>Keeping raw data separate from analysis</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use keyboard shortcuts: Shift+F11 to insert a new sheet quickly. Keep sheet names short but descriptive - avoid spaces and special characters for compatibility.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Practice with sheet tabs:</h4>
+                                        <div>
+                                            <button class="excel-button" id="add-sheet-btn">Create New Sheet</button>
+                                            <button class="excel-button rename-sheet-btn">Rename Current Sheet</button>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 10px; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                        <span style="font-weight: 600;">Sheets:</span>
+                                        <div id="sheet-tabs" style="display: flex; gap: 5px;">
+                                            <div class="sheet-tab active" data-name="Sheet1">Sheet1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- MINIMUM / MAXIMUM Function Skill -->
+                    <div class="skill-card" data-category="functions">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon blue">
+                                    <i class="fas fa-arrows-alt-v"></i>
+                                </div>
+                                <h3 class="skill-title">MINIMUM / MAXIMUM Function</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Find the smallest (MIN) or largest (MAX) values in a range of cells quickly and accurately.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Click on the cell where you want the result</li>
+                                    <li>Type =MIN( or =MAX(</li>
+                                    <li>Select the range of cells to analyse</li>
+                                    <li>Close the bracket and press Enter</li>
+                                </ol>
+                                
+                                <div class="example-code">
+                                    =MIN(B2:B10)  // Finds smallest value in range B2 to B10<br>
+                                    =MAX(B2:B10)  // Finds largest value in range B2 to B10
+                                </div>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/8CQDoHa.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Finding best and worst performance</li>
+                                        <li>Identifying price ranges</li>
+                                        <li>Quality control and outlier detection</li>
+                                        <li>Setting benchmarks and targets</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use MINA/MAXA to include text values (treated as 0), or MINIFS/MAXIFS to find min/max values that meet specific criteria.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Try MIN/MAX functions:</h4>
+                                        <div>
+                                            <button class="excel-button" onclick="calculateMinMax('min')">Calculate MIN</button>
+                                            <button class="excel-button" onclick="calculateMinMax('max')">Calculate MAX</button>
+                                            <button class="excel-button" onclick="resetMinMax()">Reset</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                                        <table class="excel-grid" style="flex: 1;">
+                                            <thead>
+                                                <tr><th>Product</th><th>Sales (£)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Laptop</td><td>1250</td></tr>
+                                                <tr><td>Phone</td><td>890</td></tr>
+                                                <tr><td>Tablet</td><td>650</td></tr>
+                                                <tr><td>Watch</td><td>299</td></tr>
+                                                <tr><td>Headphones</td><td>180</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <div style="flex: 1;">
+                                            <!-- Formula Display -->
+                                            <div class="info-box usage" style="margin-bottom: 15px;">
+                                                <h4><i class="fas fa-calculator"></i> Formula:</h4>
+                                                <div id="minmax-formula" style="font-family: 'Consolas', 'Monaco', monospace; font-size: 1.1em; background: var(--code-bg); color: var(--code-text); padding: 12px; border-radius: 6px; margin-top: 8px;">
+                                                    Click a button to see the formula
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Result Display -->
+                                            <div class="info-box tip">
+                                                <h4><i class="fas fa-trophy"></i> Result:</h4>
+                                                <div id="minmax-result" style="font-size: 1.8em; font-weight: bold; color: var(--chew-color); text-align: center; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 8px; border: 2px solid var(--chew-color);">
+                                                    £ ___
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- IF Function Skill -->
+                    <div class="skill-card" data-category="functions">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon purple">
+                                    <i class="fas fa-code-branch"></i>
+                                </div>
+                                <h3 class="skill-title">IF Function</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Make logical decisions in your spreadsheet by testing conditions and returning different values based on whether the condition is true or false.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Click on the cell where you want the result</li>
+                                    <li>Type =IF(</li>
+                                    <li>Enter the condition to test</li>
+                                    <li>Add comma, then value if true</li>
+                                    <li>Add comma, then value if false</li>
+                                    <li>Close bracket and press Enter</li>
+                                </ol>
+                                
+                                <div class="example-code">
+                                    =IF(B2>100, "High", "Low")  // If B2 > 100, show "High", otherwise "Low"<br>
+                                    =IF(A2="", "Empty", A2)     // If A2 is empty, show "Empty", otherwise show A2
+                                </div>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/lspHyES.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Categorising data (High/Medium/Low)</li>
+                                        <li>Pass/Fail grading systems</li>
+                                        <li>Handling empty cells</li>
+                                        <li>Creating conditional calculations</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">You can nest IF functions for multiple conditions: =IF(A1>90,"A",IF(A1>80,"B",IF(A1>70,"C","F"))). Consider using IFS function for cleaner multiple conditions.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Interactive IF Function:</h4>
+                                        <div>
+                                            <input type="number" id="if-input" placeholder="Enter score (0-100)" style="padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;" value="75">
+                                            <button class="excel-button" onclick="evaluateIF()">Test IF Function</button>
+                                        </div>
+                                    </div>
+                                    <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
+                                        <div style="font-family: monospace; margin-bottom: 15px;">
+                                            Formula: =IF(score>=70, "Pass", "Fail")
+                                        </div>
+                                        <div id="if-result" style="font-size: 1.2em; font-weight: bold; color: var(--accent-color);">
+                                            Enter a score to see the result
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Conditional Formatting Skill -->
+                    <div class="skill-card" data-category="formatting">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon green">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                                <h3 class="skill-title">Conditional Formatting</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Automatically format cells based on their values to highlight important data, trends, and patterns at a glance.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Select the range of cells to format</li>
+                                    <li>Go to Home tab → Conditional Formatting</li>
+                                    <li>Choose a rule type (Highlight Cells, Data Bars, etc.)</li>
+                                    <li>Set your criteria and formatting options</li>
+                                    <li>Click OK to apply</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/iPu3xqm.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Highlighting top/bottom performers</li>
+                                        <li>Showing data trends with colour scales</li>
+                                        <li>Identifying duplicates or errors</li>
+                                        <li>Creating visual dashboards</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use data bars for quick visual comparisons, colour scales for heat maps, and icon sets for status indicators. You can create custom rules using formulas for advanced scenarios.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Try conditional formatting:</h4>
+                                        <div>
+                                            <button class="excel-button" onclick="applyConditionalFormat('high')">Highlight High Values</button>
+                                            <button class="excel-button" onclick="applyConditionalFormat('low')">Highlight Low Values</button>
+                                            <button class="excel-button" onclick="applyConditionalFormat('databar')">Add Data Bars</button>
+                                            <button class="excel-button" onclick="clearConditionalFormat()">Clear Formatting</button>
+                                        </div>
+                                    </div>
+                                    <table class="excel-grid" id="conditional-table">
+                                        <thead>
+                                            <tr><th>Employee</th><th>Performance Score</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Alice</td><td class="score-cell" data-value="95">95</td></tr>
+                                            <tr><td>Bob</td><td class="score-cell" data-value="67">67</td></tr>
+                                            <tr><td>Carol</td><td class="score-cell" data-value="89">89</td></tr>
+                                            <tr><td>David</td><td class="score-cell" data-value="45">45</td></tr>
+                                            <tr><td>Emma</td><td class="score-cell" data-value="78">78</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AVERAGE Function Skill -->
+                    <div class="skill-card" data-category="functions">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon yellow">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <h3 class="skill-title">AVERAGE Function</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Calculate the arithmetic mean of a range of numbers to understand central tendencies in your data.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Click on the cell where you want the average</li>
+                                    <li>Type =AVERAGE(</li>
+                                    <li>Select the range of cells to average</li>
+                                    <li>Close the bracket and press Enter</li>
+                                </ol>
+                                
+                                <div class="example-code">
+                                    =AVERAGE(B2:B10)      // Average of range B2 to B10<br>
+                                    =AVERAGE(A1,B1,C1)    // Average of specific cells
+                                </div>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/MArVhEc.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Calculating grade point averages</li>
+                                        <li>Finding average sales performance</li>
+                                        <li>Determining typical response times</li>
+                                        <li>Comparing against benchmarks</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use AVERAGEIF to calculate averages with conditions, like =AVERAGEIF(B:B,">100",A:A) to average only values greater than 100. AVERAGEA includes text values (as 0).</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Calculate averages:</h4>
+                                        <div>
+                                            <button class="excel-button" onclick="calculateAverage('all')">Average All Scores</button>
+                                            <button class="excel-button" onclick="calculateAverage('passing')">Average Passing Scores (≥70)</button>
+                                            <button class="excel-button" onclick="resetAverage()">Reset</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                                        <table class="excel-grid" style="flex: 1;">
+                                            <thead>
+                                                <tr><th>Student</th><th>Test Score (%)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Alice</td><td>85</td></tr>
+                                                <tr><td>Bob</td><td>92</td></tr>
+                                                <tr><td>Carol</td><td>67</td></tr>
+                                                <tr><td>David</td><td>78</td></tr>
+                                                <tr><td>Emma</td><td>89</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <div style="flex: 1;">
+                                            <!-- Formula Display -->
+                                            <div class="info-box usage" style="margin-bottom: 15px;">
+                                                <h4><i class="fas fa-calculator"></i> Formula:</h4>
+                                                <div id="average-formula" style="font-family: 'Consolas', 'Monaco', monospace; font-size: 1.1em; background: var(--code-bg); color: var(--code-text); padding: 12px; border-radius: 6px; margin-top: 8px;">
+                                                    Click a button to see the formula
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Result Display -->
+                                            <div class="info-box tip">
+                                                <h4><i class="fas fa-chart-line"></i> Average Result:</h4>
+                                                <div id="average-result" style="font-size: 1.8em; font-weight: bold; color: var(--chew-color); text-align: center; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 8px; border: 2px solid var(--chew-color);">
+                                                    ___ %
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- SUM Function Skill -->
+                    <div class="skill-card" data-category="functions">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon indigo">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <h3 class="skill-title">SUM Function</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Add up numbers in a range of cells quickly and accurately - one of the most fundamental Excel functions.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Click on the cell where you want the sum</li>
+                                    <li>Type =SUM(</li>
+                                    <li>Select the range of cells to add</li>
+                                    <li>Close the bracket and press Enter</li>
+                                    <li>Or use the AutoSum button (Σ) in the ribbon</li>
+                                </ol>
+                                
+                                <div class="example-code">
+                                    =SUM(B2:B10)        // Sum of range B2 to B10<br>
+                                    =SUM(A1,B1,C1)     // Sum of specific cells<br>
+                                    =SUM(A:A)           // Sum entire column A
+                                </div>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/DsB84do.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Calculating total sales, expenses, or revenue</li>
+                                        <li>Adding up inventory quantities</li>
+                                        <li>Creating financial summaries</li>
+                                        <li>Totaling scores or measurements</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use Alt+= (Alt+Equals) as a quick shortcut for AutoSum. Use SUMIF for conditional sums like =SUMIF(A:A,"Electronics",B:B) to sum only matching criteria.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Practice SUM function:</h4>
+                                        <div>
+                                            <button class="excel-button" onclick="calculateSum('total')">Sum All Values</button>
+                                            <button class="excel-button" onclick="calculateSum('partial')">Sum First 3 Values</button>
+                                            <button class="excel-button" onclick="resetSum()">Reset</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                                        <table class="excel-grid" style="flex: 1;">
+                                            <thead>
+                                                <tr><th>Item</th><th>Quantity (kg)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Apples</td><td>125</td></tr>
+                                                <tr><td>Bananas</td><td>87</td></tr>
+                                                <tr><td>Oranges</td><td>203</td></tr>
+                                                <tr><td>Grapes</td><td>156</td></tr>
+                                                <tr><td>Strawberries</td><td>94</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <div style="flex: 1;">
+                                            <!-- Formula Display -->
+                                            <div class="info-box usage" style="margin-bottom: 15px;">
+                                                <h4><i class="fas fa-calculator"></i> Formula:</h4>
+                                                <div id="sum-formula" style="font-family: 'Consolas', 'Monaco', monospace; font-size: 1.1em; background: var(--code-bg); color: var(--code-text); padding: 12px; border-radius: 6px; margin-top: 8px;">
+                                                    Click a button to see the formula
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Result Display -->
+                                            <div class="info-box tip">
+                                                <h4><i class="fas fa-plus-circle"></i> Total Sum:</h4>
+                                                <div id="sum-result" style="font-size: 1.8em; font-weight: bold; color: var(--chew-color); text-align: center; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 8px; border: 2px solid var(--chew-color);">
+                                                    ___ kg
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- COUNTIF Function Skill -->
+                    <div class="skill-card" data-category="functions">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon pink">
+                                    <i class="fas fa-hashtag"></i>
+                                </div>
+                                <h3 class="skill-title">COUNTIF Function</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Count cells that meet a specific condition - perfect for analyzing data patterns and creating reports.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Click on the cell where you want the count</li>
+                                    <li>Type =COUNTIF(</li>
+                                    <li>Select the range to check</li>
+                                    <li>Add comma, then the criteria in quotes</li>
+                                    <li>Close bracket and press Enter</li>
+                                </ol>
+                                
+                                <div class="example-code">
+                                    =COUNTIF(B2:B10, "Pass")     // Count cells containing "Pass"<br>
+                                    =COUNTIF(A2:A10, ">100")     // Count cells greater than 100<br>
+                                    =COUNTIF(C2:C10, "*Ltd")     // Count cells ending with "Ltd"
+                                </div>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/sEkHDTo.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Counting pass/fail rates</li>
+                                        <li>Analyzing survey responses</li>
+                                        <li>Tracking inventory levels</li>
+                                        <li>Creating frequency distributions</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use wildcards: * for any characters, ? for single character. COUNTIFS allows multiple criteria. For blank cells use "" as criteria, for non-blank use "<>".</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Try COUNTIF function:</h4>
+                                        <div>
+                                            <button class="excel-button" onclick="countIf('pass')">Count "Pass" Grades</button>
+                                            <button class="excel-button" onclick="countIf('high')">Count Scores > 80</button>
+                                            <button class="excel-button" onclick="countIf('total')">Count All Non-Empty</button>
+                                            <button class="excel-button" onclick="resetCountIf()">Reset</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                                        <table class="excel-grid" style="flex: 1;">
+                                            <thead>
+                                                <tr><th>Student</th><th>Score (%)</th><th>Grade</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>John</td><td>95</td><td>Pass</td></tr>
+                                                <tr><td>Mary</td><td>67</td><td>Fail</td></tr>
+                                                <tr><td>Peter</td><td>82</td><td>Pass</td></tr>
+                                                <tr><td>Sarah</td><td>78</td><td>Pass</td></tr>
+                                                <tr><td>Mike</td><td>59</td><td>Fail</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <div style="flex: 1;">
+                                            <!-- Formula Display -->
+                                            <div class="info-box usage" style="margin-bottom: 15px;">
+                                                <h4><i class="fas fa-calculator"></i> Formula:</h4>
+                                                <div id="countif-formula" style="font-family: 'Consolas', 'Monaco', monospace; font-size: 1.1em; background: var(--code-bg); color: var(--code-text); padding: 12px; border-radius: 6px; margin-top: 8px;">
+                                                    Click a button to see the formula
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Result Display -->
+                                            <div class="info-box tip">
+                                                <h4><i class="fas fa-hashtag"></i> Count Result:</h4>
+                                                <div id="countif-result" style="font-size: 1.8em; font-weight: bold; color: var(--chew-color); text-align: center; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 8px; border: 2px solid var(--chew-color);">
+                                                    ___
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Creating Charts Skill -->
+                    <div class="skill-card" data-category="visualization">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon teal">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <h3 class="skill-title">Creating Charts</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Transform your data into visual charts and graphs to make trends, patterns, and insights easier to understand and communicate.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Select the data range including headers</li>
+                                    <li>Go to Insert tab in the ribbon</li>
+                                    <li>Choose a chart type (Column, Line, Pie, etc.)</li>
+                                    <li>Click on the specific chart style you want</li>
+                                    <li>Customize with Chart Tools if needed</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/Zc2kFvS.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li><strong>Column charts:</strong> Comparing categories</li>
+                                        <li><strong>Line charts:</strong> Showing trends over time</li>
+                                        <li><strong>Pie charts:</strong> Showing parts of a whole</li>
+                                        <li><strong>Bar charts:</strong> Comparing items with long names</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box tip">
+                                    <h4><i class="fas fa-star"></i> Pro Tip:</h4>
+                                    <p style="margin: 0;">Use F11 to quickly create a chart on a new sheet. Always include clear titles and axis labels. Choose colors that work for colorblind users, and avoid 3D effects unless necessary.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Chart type selector:</h4>
+                                        <div>
+                                            <button class="excel-button" onclick="showChart('column')">Column Chart</button>
+                                            <button class="excel-button" onclick="showChart('line')">Line Chart</button>
+                                            <button class="excel-button" onclick="showChart('pie')">Pie Chart</button>
+                                            <button class="excel-button" onclick="hideChart()">Hide Chart</button>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                                        <table class="excel-grid" style="flex: 1;">
+                                            <thead>
+                                                <tr><th>Quarter</th><th>Sales</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Q1</td><td>150</td></tr>
+                                                <tr><td>Q2</td><td>200</td></tr>
+                                                <tr><td>Q3</td><td>175</td></tr>
+                                                <tr><td>Q4</td><td>225</td></tr>
+                                            </tbody>
+                                        </table>
+                                        <div id="chart-display" style="flex: 1; min-height: 200px; background: #f8f9fa; border: 2px dashed #ccc; border-radius: 8px; display: none; align-items: center; justify-content: center; font-style: italic; color: #666;">
+                                            Select a chart type to see visualization
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Find and Replace Skill -->
+                    <div class="skill-card" data-category="data-cleaning">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <div class="skill-header-content">
+                                <div class="skill-icon orange">
+                                    <i class="fas fa-search-plus"></i>
+                                </div>
+                                <h3 class="skill-title">Find and Replace</h3>
+                            </div>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div class="skill-content">
+                            <div class="skill-details">
+                                <p>Quickly locate specific data and replace it with new values across your entire spreadsheet or selected range.</p>
+                                
+                                <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Quick Steps:</h4>
+                                <ol style="margin: 0 0 20px 20px; line-height: 1.8;">
+                                    <li>Press Ctrl+H to open Find & Replace dialog</li>
+                                    <li>Enter the text to find in "Find what" field</li>
+                                    <li>Enter the replacement text in "Replace with" field</li>
+                                    <li>Click "Replace All" or "Replace" for individual instances</li>
+                                    <li>Use "Find All" to see all matches first</li>
+                                </ol>
+                                
+                                <div class="video-demo">
+                                    <h4 style="color: var(--accent-color); margin: 20px 0 10px 0;">Watch how it works:</h4>
+                                    <div class="video-container">
+                                        <video width="100%" controls autoplay loop muted playsinline>
+                                            <source src="https://i.imgur.com/wpwVcLJ.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-box usage">
+                                    <h4><i class="fas fa-lightbulb"></i> When to use:</h4>
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Correcting spelling errors throughout document</li>
+                                        <li>Updating product codes or references</li>
+                                        <li>Standardizing data format (e.g., "Qty" to "Quantity")</li>
+                                        <li>Removing unwanted characters or spaces</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="info-box warning">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> Warning:</h4>
+                                    <p style="margin: 0;">Always review matches before replacing all! Use "Match entire cell contents" option to avoid partial replacements. Save your file before major find/replace operations.</p>
+                                </div>
+                                
+                                <div class="simulation-container">
+                                    <div class="simulation-header">
+                                        <h4 class="simulation-title">Try Find & Replace:</h4>
+                                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                            <input type="text" id="find-text" placeholder="Find..." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" value="Acme Corp">
+                                            <input type="text" id="replace-text" placeholder="Replace with..." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" value="ACME Corporation">
+                                            <button class="excel-button" onclick="findAndReplace()">Replace All</button>
+                                            <button class="excel-button" onclick="resetFindReplace()">Reset Data</button>
+                                        </div>
+                                    </div>
+                                    <table class="excel-grid" id="find-replace-table">
+                                        <thead>
+                                            <tr><th>Company</th><th>Product</th><th>Status</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Acme Corp</td><td>Widget A</td><td>Active</td></tr>
+                                            <tr><td>Acme Corp</td><td>Widget B</td><td>Inactive</td></tr>
+                                            <tr><td>Beta Ltd</td><td>Gadget X</td><td>Active</td></tr>
+                                            <tr><td>Acme Corp</td><td>Widget C</td><td>Active</td></tr>
+                                            <tr><td>Gamma Inc</td><td>Tool Y</td><td>Inactive</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                                        <strong>Try these examples:</strong> Find "Acme Corp" and replace with "ACME Corporation", or find "Inactive" and replace with "Discontinued"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all simulations
+            initFilterSimulation();
+            initSortSimulation();
+            initDeleteColumnSimulation();
+            initSheetsSimulation();
+            initAverageSimulation();
+            initSumSimulation();
+            initCountIfSimulation();
+            initChartSimulation();
+            initFindReplaceSimulation();
+            initMinMaxSimulation();
+            initIfSimulation();
+            initConditionalFormattingSimulation();
+            
+            // Show/hide skill content
+            const skillHeaders = document.querySelectorAll('.skill-header');
+            
+            skillHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const arrow = this.querySelector('.toggle-arrow');
+                    
+                    if (content.classList.contains('active')) {
+                        // Closing the content
+                        content.classList.remove('active');
+                        arrow.classList.remove('rotate');
+                        
+                        // Store the current height
+                        const height = content.offsetHeight;
+                        content.style.height = height + 'px';
+                        
+                        // Force a reflow
+                        content.offsetHeight;
+                        
+                        // Transition to height 0
+                        content.style.height = '0px';
+                        content.style.overflow = 'hidden';
+                        
+                        // Reset after animation
+                        setTimeout(() => {
+                            content.style.maxHeight = '0';
+                        }, 300);
+                    } else {
+                        // Opening the content
+                        content.classList.add('active');
+                        arrow.classList.add('rotate');
+                        
+                        // Set max-height to a large value
+                        content.style.maxHeight = '3000px';
+                        content.style.height = 'auto';
+                        content.style.overflow = 'visible';
+                    }
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('skill-search');
+            const skillCards = document.querySelectorAll('.skill-card');
+            
+            function highlightText(element, searchText) {
+                if (!searchText.trim()) {
+                    // If search is empty, restore original text
+                    element.innerHTML = element.innerHTML.replace(/<mark class="search-highlight">(.*?)<\/mark>/g, '$1');
+                    return;
+                }
+                
+                const regex = new RegExp(searchText, 'gi');
+                element.innerHTML = element.innerHTML.replace(/<mark class="search-highlight">(.*?)<\/mark>/g, '$1'); // Remove existing highlights
+                element.innerHTML = element.innerHTML.replace(regex, match => `<mark class="search-highlight">${match}</mark>`);
+            }
+            
+            searchInput.addEventListener('input', function() {
+                const searchText = this.value.toLowerCase();
+                
+                skillCards.forEach(card => {
+                    const title = card.querySelector('.skill-title').textContent.toLowerCase();
+                    const content = card.querySelector('.skill-details').textContent.toLowerCase();
+                    
+                    if (title.includes(searchText) || content.includes(searchText)) {
+                        card.style.display = 'block';
+                        
+                        // Highlight matches in title
+                        if (searchText) {
+                            highlightText(card.querySelector('.skill-title'), searchText);
+                            
+                            // Open the card if it contains the search text
+                            const content = card.querySelector('.skill-content');
+                            const arrow = card.querySelector('.toggle-arrow');
+                            
+                            if (!content.classList.contains('active')) {
+                                content.classList.add('active');
+                                arrow.classList.add('rotate');
+                                
+                                // Set directly to auto height
+                                content.style.maxHeight = '3000px';
+                                content.style.height = 'auto';
+                                content.style.overflow = 'visible';
+                            }
+                        }
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Category filter functionality
+            const categoryButtons = document.querySelectorAll('.filter-pill');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    
+                    // Show/hide cards without animation
+                    skillCards.forEach(card => {
+                        if (category === 'all' || card.dataset.category === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Filter Simulation
+            function initFilterSimulation() {
+                const filterButtons = document.querySelectorAll('.filter-button');
+                const tableRows = document.querySelectorAll('#filter-simulation tbody tr');
+                
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const category = this.dataset.category;
+                        const value = this.dataset.value;
+                        
+                        // Remove active class from all buttons
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        tableRows.forEach(row => {
+                            row.style.display = 'table-row';
+                            row.classList.remove('filtered-row');
+                            
+                            if (category === 'all') {
+                                // Show all rows
+                                setTimeout(() => {
+                                    row.classList.add('filtered-row');
+                                }, 10);
+                            } 
+                            else if (category && row.dataset.category !== category) {
+                                // Hide rows that don't match the category
+                                row.style.display = 'none';
+                            }
+                            else if (value === 'high' && parseInt(row.dataset.sales) <= 800) {
+                                // Hide rows with sales <= 800
+                                row.style.display = 'none';
+                            }
+                            else {
+                                // Highlight matching rows
+                                setTimeout(() => {
+                                    row.classList.add('filtered-row');
+                                }, 10);
+                            }
+                        });
+                    });
+                });
+            }
+            
+            // Sort Simulation
+            function initSortSimulation() {
+                const table = document.querySelector('.sort-table');
+                const headers = table.querySelectorAll('th');
+                
+                headers.forEach(header => {
+                    header.addEventListener('click', function() {
+                        const columnIndex = Array.from(this.parentNode.children).indexOf(this);
+                        
+                        // Remove sort indicators from all headers
+                        headers.forEach(h => {
+                            const indicator = h.querySelector('.sort-indicator');
+                            if (indicator) indicator.textContent = '';
+                        });
+                        
+                        // Set sort indicator on clicked header
+                        const indicator = this.querySelector('.sort-indicator');
+                        if (indicator) {
+                            const isAscending = indicator.textContent === '▲' ? false : true;
+                            indicator.textContent = isAscending ? '▲' : '▼';
+                            
+                            // Sort table rows
+                            const rows = Array.from(table.querySelectorAll('tbody tr'));
+                            rows.sort((a, b) => {
+                                let aValue = a.children[columnIndex].textContent.trim();
+                                let bValue = b.children[columnIndex].textContent.trim();
+                                
+                                // Check if values are numbers
+                                const aNum = parseFloat(aValue);
+                                const bNum = parseFloat(bValue);
+                                
+                                if (!isNaN(aNum) && !isNaN(bNum)) {
+                                    return isAscending ? aNum - bNum : bNum - aNum;
+                                } else {
+                                    return isAscending 
+                                        ? aValue.localeCompare(bValue) 
+                                        : bValue.localeCompare(aValue);
+                                }
+                            });
+                            
+                            // Apply sorting
+                            const tbody = table.querySelector('tbody');
+                            rows.forEach(row => {
+                                tbody.appendChild(row);
+                            });
+                        }
+                    });
+                });
+            }
+            
+            // Delete Column Simulation
+            function initDeleteColumnSimulation() {
+                // Delete column buttons functionality
+                function setupDeleteButtons() {
+                    document.querySelectorAll('.delete-col-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const columnIndex = parseInt(this.dataset.col);
+                            const table = document.querySelector('.delete-table');
+                            
+                            // Hide all cells in the column
+                            const cells = table.querySelectorAll(`tr > *:nth-child(${columnIndex + 1})`);
+                            cells.forEach(cell => {
+                                cell.style.display = 'none';
+                            });
+                        });
+                    });
+                }
+                
+                // Reset columns function
+                const resetButton = document.getElementById('reset-columns');
+                if (resetButton) {
+                    resetButton.addEventListener('click', function() {
+                        const table = document.querySelector('.delete-table');
+                        const cells = table.querySelectorAll('td, th');
+                        cells.forEach(cell => {
+                            cell.style.display = '';
+                        });
+                    });
+                }
+                
+                setupDeleteButtons();
+            }
+            
+            // Sheets Simulation
+            function initSheetsSimulation() {
+                const addSheetBtn = document.getElementById('add-sheet-btn');
+                const sheetTabs = document.getElementById('sheet-tabs');
+                let sheetCount = 3;
+                
+                // Set active tab function
+                function setActiveTab(tab) {
+                    document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                }
+                
+                // Initial tab click events
+                function setupTabEvents() {
+                    document.querySelectorAll('.sheet-tab').forEach(tab => {
+                        tab.addEventListener('click', function() {
+                            setActiveTab(this);
+                        });
+                    });
+                }
+                
+                // Add new sheet button
+                if (addSheetBtn) {
+                    addSheetBtn.addEventListener('click', function() {
+                        sheetCount++;
+                        const newSheetName = `Sheet${sheetCount}`;
+                        
+                        const newTab = document.createElement('div');
+                        newTab.className = 'sheet-tab';
+                        newTab.textContent = newSheetName;
+                        newTab.dataset.name = newSheetName;
+                        
+                        sheetTabs.appendChild(newTab);
+                        
+                        // Add click event to new tab
+                        newTab.addEventListener('click', function() {
+                            setActiveTab(this);
+                        });
+                        
+                        // Activate the new tab
+                        setActiveTab(newTab);
+                    });
+                }
+                
+                // Rename sheet functionality
+                const renameButton = document.querySelector('.rename-sheet-btn');
+                if (renameButton) {
+                    renameButton.addEventListener('click', function() {
+                        const activeTab = document.querySelector('.sheet-tab.active');
+                        if (activeTab) {
+                            const currentName = activeTab.textContent;
+                            const newName = prompt('Enter new sheet name:', currentName);
+                            
+                            if (newName && newName.trim() !== '') {
+                                activeTab.textContent = newName;
+                                activeTab.dataset.name = newName;
+                            }
+                        }
+                    });
+                }
+                
+                setupTabEvents();
+            }
+            
+            // Average Function Simulation
+            function initAverageSimulation() {
+                function calculateAverage(type) {
+                    const scores = [85, 92, 67, 78, 89];
+                    const formulaDiv = document.getElementById('average-formula');
+                    const resultDiv = document.getElementById('average-result');
+                    
+                    if (type === 'all') {
+                        const average = scores.reduce((a, b) => a + b, 0) / scores.length;
+                        if (formulaDiv) formulaDiv.textContent = '=AVERAGE(B2:B6)';
+                        if (resultDiv) resultDiv.textContent = `${average.toFixed(1)}%`;
+                    } else if (type === 'passing') {
+                        const passingScores = scores.filter(score => score >= 70);
+                        const average = passingScores.reduce((a, b) => a + b, 0) / passingScores.length;
+                        if (formulaDiv) formulaDiv.textContent = '=AVERAGEIF(B2:B6,">=70")';
+                        if (resultDiv) resultDiv.textContent = `${average.toFixed(1)}%`;
+                    }
+                }
+                
+                function resetAverage() {
+                    const formulaDiv = document.getElementById('average-formula');
+                    const resultDiv = document.getElementById('average-result');
+                    if (formulaDiv) formulaDiv.textContent = 'Click a button to see the formula';
+                    if (resultDiv) resultDiv.textContent = '___ %';
+                }
+                
+                // Make functions globally available
+                window.calculateAverage = calculateAverage;
+                window.resetAverage = resetAverage;
+            }
+            
+            // SUM Function Simulation
+            function initSumSimulation() {
+                function calculateSum(type) {
+                    const quantities = [125, 87, 203, 156, 94];
+                    const formulaDiv = document.getElementById('sum-formula');
+                    const resultDiv = document.getElementById('sum-result');
+                    
+                    if (type === 'total') {
+                        const sum = quantities.reduce((a, b) => a + b, 0);
+                        if (formulaDiv) formulaDiv.textContent = '=SUM(B2:B6)';
+                        if (resultDiv) resultDiv.textContent = `${sum} kg`;
+                    } else if (type === 'partial') {
+                        const sum = quantities.slice(0, 3).reduce((a, b) => a + b, 0);
+                        if (formulaDiv) formulaDiv.textContent = '=SUM(B2:B4)';
+                        if (resultDiv) resultDiv.textContent = `${sum} kg`;
+                    }
+                }
+                
+                function resetSum() {
+                    const formulaDiv = document.getElementById('sum-formula');
+                    const resultDiv = document.getElementById('sum-result');
+                    if (formulaDiv) formulaDiv.textContent = 'Click a button to see the formula';
+                    if (resultDiv) resultDiv.textContent = '___ kg';
+                }
+                
+                // Make functions globally available
+                window.calculateSum = calculateSum;
+                window.resetSum = resetSum;
+            }
+            
+            // COUNTIF Function Simulation
+            function initCountIfSimulation() {
+                function countIf(type) {
+                    const data = [
+                        {score: 95, grade: 'Pass'},
+                        {score: 67, grade: 'Fail'},
+                        {score: 82, grade: 'Pass'},
+                        {score: 78, grade: 'Pass'},
+                        {score: 59, grade: 'Fail'}
+                    ];
+                    
+                    const formulaDiv = document.getElementById('countif-formula');
+                    const resultDiv = document.getElementById('countif-result');
+                    
+                    if (type === 'pass') {
+                        const count = data.filter(item => item.grade === 'Pass').length;
+                        if (formulaDiv) formulaDiv.textContent = '=COUNTIF(C2:C6,"Pass")';
+                        if (resultDiv) resultDiv.textContent = count.toString();
+                    } else if (type === 'high') {
+                        const count = data.filter(item => item.score > 80).length;
+                        if (formulaDiv) formulaDiv.textContent = '=COUNTIF(B2:B6,">80")';
+                        if (resultDiv) resultDiv.textContent = count.toString();
+                    } else if (type === 'total') {
+                        if (formulaDiv) formulaDiv.textContent = '=COUNTA(B2:B6)';
+                        if (resultDiv) resultDiv.textContent = data.length.toString();
+                    }
+                }
+                
+                function resetCountIf() {
+                    const formulaDiv = document.getElementById('countif-formula');
+                    const resultDiv = document.getElementById('countif-result');
+                    if (formulaDiv) formulaDiv.textContent = 'Click a button to see the formula';
+                    if (resultDiv) resultDiv.textContent = '___';
+                }
+                
+                // Make functions globally available
+                window.countIf = countIf;
+                window.resetCountIf = resetCountIf;
+            }
+            
+            // Chart Simulation
+            function initChartSimulation() {
+                function showChart(type) {
+                    const chartDisplay = document.getElementById('chart-display');
+                    if (!chartDisplay) return;
+                    
+                    chartDisplay.style.display = 'flex';
+                    
+                    let content = '';
+                    if (type === 'column') {
+                        content = `
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; margin-bottom: 10px;">Column Chart</div>
+                                <div style="display: flex; align-items: end; height: 100px; gap: 10px;">
+                                    <div style="background: #3b82f6; width: 30px; height: 60%; border-radius: 3px 3px 0 0;"></div>
+                                    <div style="background: #3b82f6; width: 30px; height: 80%; border-radius: 3px 3px 0 0;"></div>
+                                    <div style="background: #3b82f6; width: 30px; height: 70%; border-radius: 3px 3px 0 0;"></div>
+                                    <div style="background: #3b82f6; width: 30px; height: 90%; border-radius: 3px 3px 0 0;"></div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (type === 'line') {
+                        content = `
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; margin-bottom: 10px;">Line Chart</div>
+                                <svg width="150" height="100" style="border: 1px solid #ddd;">
+                                    <polyline points="10,70 50,50 90,60 130,30" stroke="#3b82f6" stroke-width="2" fill="none"/>
+                                    <circle cx="10" cy="70" r="3" fill="#3b82f6"/>
+                                    <circle cx="50" cy="50" r="3" fill="#3b82f6"/>
+                                    <circle cx="90" cy="60" r="3" fill="#3b82f6"/>
+                                    <circle cx="130" cy="30" r="3" fill="#3b82f6"/>
+                                </svg>
+                            </div>
+                        `;
+                    } else if (type === 'pie') {
+                        content = `
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; margin-bottom: 10px;">Pie Chart</div>
+                                <svg width="120" height="120">
+                                    <circle cx="60" cy="60" r="50" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+                                    <path d="M 60,60 L 110,60 A 50,50 0 0,1 85,95 z" fill="#10b981" stroke="#fff" stroke-width="2"/>
+                                    <path d="M 60,60 L 85,95 A 50,50 0 0,1 35,95 z" fill="#f59e0b" stroke="#fff" stroke-width="2"/>
+                                    <path d="M 60,60 L 35,95 A 50,50 0 0,1 60,10 z" fill="#ef4444" stroke="#fff" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        `;
+                    }
+                    
+                    chartDisplay.innerHTML = content;
+                }
+                
+                function hideChart() {
+                    const chartDisplay = document.getElementById('chart-display');
+                    if (chartDisplay) {
+                        chartDisplay.style.display = 'none';
+                    }
+                }
+                
+                // Make functions globally available
+                window.showChart = showChart;
+                window.hideChart = hideChart;
+            }
+            
+            // Find and Replace Simulation
+            function initFindReplaceSimulation() {
+                const originalData = [
+                    'Acme Corp', 'Beta Ltd', 'Acme Corp', 'Gamma Inc',
+                    'Widget A', 'Gadget X', 'Widget C', 'Tool Y',
+                    'Active', 'Active', 'Active', 'Inactive'
+                ];
+                
+                function findAndReplace() {
+                    const findText = document.getElementById('find-text').value;
+                    const replaceText = document.getElementById('replace-text').value;
+                    const table = document.getElementById('find-replace-table');
+                    
+                    if (!findText || !table) return;
+                    
+                    const cells = table.querySelectorAll('tbody td');
+                    cells.forEach(cell => {
+                        if (cell.textContent === findText) {
+                            cell.textContent = replaceText;
+                            cell.style.backgroundColor = '#10b981';
+                            setTimeout(() => {
+                                cell.style.backgroundColor = '';
+                            }, 1000);
+                        }
+                    });
+                }
+                
+                function resetFindReplace() {
+                    const table = document.getElementById('find-replace-table');
+                    if (!table) return;
+                    
+                    const cells = table.querySelectorAll('tbody td');
+                    const data = [
+                        ['Acme Corp', 'Widget A', 'Active'],
+                        ['Acme Corp', 'Widget B', 'Inactive'],
+                        ['Beta Ltd', 'Gadget X', 'Active'],
+                        ['Acme Corp', 'Widget C', 'Active'],
+                        ['Gamma Inc', 'Tool Y', 'Inactive']
+                    ];
+                    
+                    let index = 0;
+                    cells.forEach(cell => {
+                        const row = Math.floor(index / 3);
+                        const col = index % 3;
+                        cell.textContent = data[row][col];
+                        cell.style.backgroundColor = '';
+                        index++;
+                    });
+                }
+                
+                // Make functions globally available
+                window.findAndReplace = findAndReplace;
+                window.resetFindReplace = resetFindReplace;
+            }
+            
+            // MIN/MAX Function Simulation
+            function initMinMaxSimulation() {
+                function calculateMinMax(type) {
+                    const values = [1250, 890, 650, 299, 180];
+                    const formulaDiv = document.getElementById('minmax-formula');
+                    const resultDiv = document.getElementById('minmax-result');
+                    
+                    if (type === 'min') {
+                        const min = Math.min(...values);
+                        if (formulaDiv) formulaDiv.textContent = '=MIN(B2:B6)';
+                        if (resultDiv) resultDiv.textContent = `£${min}`;
+                    } else if (type === 'max') {
+                        const max = Math.max(...values);
+                        if (formulaDiv) formulaDiv.textContent = '=MAX(B2:B6)';
+                        if (resultDiv) resultDiv.textContent = `£${max}`;
+                    }
+                }
+                
+                function resetMinMax() {
+                    const formulaDiv = document.getElementById('minmax-formula');
+                    const resultDiv = document.getElementById('minmax-result');
+                    if (formulaDiv) formulaDiv.textContent = 'Click a button to see the formula';
+                    if (resultDiv) resultDiv.textContent = '£ ___';
+                }
+                
+                // Make functions globally available
+                window.calculateMinMax = calculateMinMax;
+                window.resetMinMax = resetMinMax;
+            }
+            
+            // IF Function Simulation
+            function initIfSimulation() {
+                function evaluateIF() {
+                    const input = document.getElementById('if-input');
+                    const result = document.getElementById('if-result');
+                    
+                    if (!input || !result) return;
+                    
+                    const score = parseFloat(input.value);
+                    if (!isNaN(score)) {
+                        if (score >= 70) {
+                            result.textContent = 'Pass';
+                            result.style.color = 'var(--chew-color)';
+                        } else {
+                            result.textContent = 'Fail';
+                            result.style.color = 'var(--bad-color)';
+                        }
+                    } else {
+                        result.textContent = 'Enter a score to see the result';
+                        result.style.color = 'var(--accent-color)';
+                    }
+                }
+                
+                // Make function globally available
+                window.evaluateIF = evaluateIF;
+                
+                // Set up input listener
+                const input = document.getElementById('if-input');
+                if (input) {
+                    input.addEventListener('input', evaluateIF);
+                }
+            }
+            
+            // Conditional Formatting Simulation
+            function initConditionalFormattingSimulation() {
+                function applyConditionalFormat(type) {
+                    const cells = document.querySelectorAll('.score-cell');
+                    
+                    // Clear existing formatting
+                    cells.forEach(cell => {
+                        cell.style.backgroundColor = '';
+                        cell.style.background = '';
+                    });
+                    
+                    if (type === 'high') {
+                        cells.forEach(cell => {
+                            const value = parseInt(cell.dataset.value);
+                            if (value > 90) {
+                                cell.style.backgroundColor = '#10b981';
+                                cell.style.color = 'white';
+                            }
+                        });
+                    } else if (type === 'low') {
+                        cells.forEach(cell => {
+                            const value = parseInt(cell.dataset.value);
+                            if (value < 70) {
+                                cell.style.backgroundColor = '#ef4444';
+                                cell.style.color = 'white';
+                            }
+                        });
+                    } else if (type === 'databar') {
+                        const values = Array.from(cells).map(cell => parseInt(cell.dataset.value));
+                        const max = Math.max(...values);
+                        
+                        cells.forEach(cell => {
+                            const value = parseInt(cell.dataset.value);
+                            const percentage = (value / max) * 100;
+                            cell.style.background = `linear-gradient(to right, #3b82f6 ${percentage}%, transparent ${percentage}%)`;
+                        });
+                    }
+                }
+                
+                function clearConditionalFormat() {
+                    const cells = document.querySelectorAll('.score-cell');
+                    cells.forEach(cell => {
+                        cell.style.backgroundColor = '';
+                        cell.style.background = '';
+                        cell.style.color = '';
+                    });
+                }
+                
+                // Make functions globally available
+                window.applyConditionalFormat = applyConditionalFormat;
+                window.clearConditionalFormat = clearConditionalFormat;
+            }
+            
+            // Initialize the active filter button
+            const activeFilter = document.querySelector('.filter-pill[data-category="all"]');
+            if (activeFilter) activeFilter.classList.add('active');
+        });
+    </script>
+</body>
+</html>
