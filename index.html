@@ -7,6 +7,25 @@
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Completion pill styling */
+        .completion-pill {
+            background-color: #e5e7eb;
+            color: #6b7280;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .completion-pill.completed {
+            background-color: #10b981;
+            color: white;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <!-- Favicon Icons -->
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -69,12 +88,8 @@
                         <div class="element-content">
                             <p>Learn how to perform basic mathematical operations using cell references in Excel.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chunk-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -90,12 +105,8 @@
                         <div class="element-content">
                             <p>Practice and master Excel calculations with progressive challenges.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chunk-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -121,12 +132,8 @@
                         <div class="element-content">
                             <p>Learn essential data cleaning techniques in Excel including filtering, removing unnecessary columns, and handling errors.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chew-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -142,12 +149,8 @@
                         <div class="element-content">
                             <p>Apply data cleaning techniques to a real movie dataset using filters, sorting, and data standardisation.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chew-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -173,12 +176,8 @@
                         <div class="element-content">
                             <p>Learn how to use some basic functions and how to represent data with various visual charts.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chunk-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -194,12 +193,8 @@
                         <div class="element-content">
                             <p>Apply your understanding of basic functions and charts to analyse data from a party planner spreadsheet.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chunk-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -225,12 +220,8 @@
                         <div class="element-content">
                             <p>Learn how to use AVERAGE, COUNTIF, IF functions and apply conditional formatting to analyse data effectively.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chew-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -246,12 +237,8 @@
                         <div class="element-content">
                             <p>Apply advanced Excel functions to analyse sports event data using AVERAGE, COUNTIF, IF and conditional formatting.</p>
                             
-                            <div style="width: 100%; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; margin: 15px 0;">
-                                <div class="progress-bar" style="height: 100%; background-color: var(--chew-color); border-radius: 4px; width: 0%; transition: width 0.5s ease;"></div>
-                            </div>
-                            
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="completion-text" style="font-size: 0.9em;">0% complete</span>
+                                <span class="completion-pill">0% complete</span>
                                 <div class="assessment-completed" style="display: none; background-color: #48BB78; color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem;">
                                     <i class="fas fa-check" style="margin-right: 5px;"></i>Assessment
                                 </div>
@@ -275,7 +262,7 @@
     </main>
 
     <script>
-        // Initialize tutorial progress from localStorage
+        // Initialize tutorial progress from localStorage  
         function initTutorials() {
             const tutorials = [
                 { id: 1, title: "Cells and Operations" },
@@ -295,14 +282,16 @@
                 
                 const card = document.querySelector(`.card[data-id="${tutorial.id}"]`);
                 if (card) {
-                    const progressBar = card.querySelector('.progress-bar');
-                    const completionText = card.querySelector('.completion-text');
+                    const completionPill = card.querySelector('.completion-pill');
                     const assessmentBadge = card.querySelector('.assessment-completed');
                     
-                    progressBar.style.width = `${progress}%`;
-                    completionText.textContent = isCompleted ? 'Completed' : `${progress}% complete`;
-                    if (isCompleted) {
-                        completionText.style.color = '#48BB78';
+                    if (completionPill) {
+                        completionPill.textContent = isCompleted ? 'Completed' : `${progress}% complete`;
+                        if (isCompleted) {
+                            completionPill.classList.add('completed');
+                        } else {
+                            completionPill.classList.remove('completed');
+                        }
                     }
                     
                     if (assessmentSubmitted) {
@@ -310,6 +299,7 @@
                     }
                 }
             });
+            
         }
         
         // Search functionality

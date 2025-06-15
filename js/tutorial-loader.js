@@ -12,15 +12,8 @@ window.initTutorial = async function(tutorialId) {
         initTooltips();
         initInTutorialToggles();
         
-        const savedProgress = parseInt(localStorage.getItem(`tutorialProgress${tutorialId}`) || '0');
-        const lastOpenedStep = parseInt(localStorage.getItem(`lastOpenedStep${tutorialId}`) || '0');
-        const stepsToOpen = Math.max(Math.floor((savedProgress / 100) * tutorialData.steps.length), lastOpenedStep + 1);
-        
-        document.querySelectorAll('.step-toggle').forEach((toggle, index) => {
-            if (index < stepsToOpen) {
-                toggle.click();
-            }
-        });
+        // Keep all steps closed by default - user must click to expand
+        // Progress tracking will still work when user manually opens steps
         
         // Set up next tutorial button
         const nextTutorialBtn = document.getElementById('next-tutorial-btn');
